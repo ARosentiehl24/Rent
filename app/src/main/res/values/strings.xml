@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Rent</string>
+    <string name="report">Report</string>
+    <string name="buscar">Search</string>
+    <string name="search_by">Search By</string>
+    <string name="report_by">Report By</string>
+    <string name="code">Code</string>
+    <string name="error_message_empty">This field can not be empty</string>
+    <string name="add_new_rent">Submit</string>
+    <string name="delete">Delete</string>
+    <string name="delete_message">Are you sure that you want delete this rent?</string>
+    <string name="about">About</string>
+
+    <string-array name="types">
+        <item>Casa</item>
+        <item>Apartamento</item>
+        <item>Local</item>
+    </string-array>
+</resources>
