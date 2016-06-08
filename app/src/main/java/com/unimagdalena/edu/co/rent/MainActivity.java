@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 
+import org.fingerlinks.mobile.android.navigator.Navigator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +36,10 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ArrayList<Rent> rents;
     private Gson gson = new Gson();
+    private RentApp rentApp;
+    private RentAdapter rentAdapter;
 
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -49,30 +53,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        rentApp = (RentApp) getApplication();
+
+        rents = (ArrayList<Rent>) getIntent().getSerializableExtra("rents");
+
+        rentAdapter = new RentAdapter(rentApp, rents, MainActivity.this);
+        recyclerView.setAdapter(rentAdapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Constants.GET, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        processListResponse(response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Error", error.toString());
-            }
-        });
-
-        VolleySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
 
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.teal_500));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Constants.GET, null,
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, rentApp.GET(), null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -91,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     public void processListResponse(JSONObject response) {
         try {
             Integer state = response.getInt("estado");
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Collections.addAll(rentArrayList, rents);
 
-                    RentAdapter rentAdapter = new RentAdapter(rentArrayList, MainActivity.this);
+                    RentAdapter rentAdapter = new RentAdapter(rentApp, rentArrayList, MainActivity.this);
                     recyclerView.setAdapter(rentAdapter);
 
                     if (swipeRefreshLayout.isRefreshing()) {
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadByCity(String city) {
-        String path = Constants.GET_BY_CITY + "?ciudad=" + city.replace(" ", "%20");
+        String path = rentApp.GET_BY_CITY() + "?ciudad=" + city.replace(" ", "%20");
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, path, null, new Response.Listener<JSONObject>() {
             @Override
@@ -199,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Collections.addAll(rentArrayList, rents);
 
-                    RentAdapter rentAdapter = new RentAdapter(rentArrayList, MainActivity.this);
+                    RentAdapter rentAdapter = new RentAdapter(rentApp, rentArrayList, MainActivity.this);
                     recyclerView.setAdapter(rentAdapter);
                     break;
                 case "2":
@@ -233,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_report:
-                jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Constants.GET_CITIES, null,
+                jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, rentApp.GET_CITIES(), null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -263,6 +262,9 @@ public class MainActivity extends AppCompatActivity {
                         .show();
 
                 return true;
+            case R.id.action_settings:
+                Navigator.with(this).build().goTo(SettingsActivity.class).animation().commit();
+                return true;
             case R.id.action_about:
                 new MaterialDialog.Builder(this)
                         .title(R.string.about)
@@ -277,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadByTypes(int which) {
-        String path = Constants.GET_BY_TYPE + "?id_tipo=" + which;
+        String path = rentApp.GET_BY_TYPE() + "?id_tipo=" + which;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, path, null, new Response.Listener<JSONObject>() {
             @Override
@@ -299,5 +301,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreateUpdateActivity.class);
         intent.putExtra("action", true);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

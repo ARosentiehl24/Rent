@@ -44,4 +44,5 @@ dependencies {
     compile 'com.emmasuzuki:easyform:1.0.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
+    compile 'com.github.GrenderG:Prefs:1.1'
 }

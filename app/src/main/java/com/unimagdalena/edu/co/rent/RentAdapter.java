@@ -31,10 +31,12 @@ import butterknife.ButterKnife;
 
 public class RentAdapter extends /*BaseQuickAdapter<Rent>*/ RecyclerView.Adapter<RentAdapter.ViewHolder> {
 
+    private RentApp application;
     private ArrayList<Rent> rents;
     private Activity activity;
 
-    public RentAdapter(ArrayList<Rent> rents, Activity activity) {
+    public RentAdapter(RentApp application, ArrayList<Rent> rents, Activity activity) {
+        this.application = application;
         this.rents = rents;
         this.activity = activity;
     }
@@ -55,7 +57,7 @@ public class RentAdapter extends /*BaseQuickAdapter<Rent>*/ RecyclerView.Adapter
         holder.code.setText(String.format("Rent Code: %s", rent.getCodigo_arriendo()));
         holder.description.setText(String.format("%s en %s", rent.getTipo_vivenda(), rent.getCiudad()));
         holder.location.setText(rent.getDireccion());
-        holder.price.setText(formatoPeso(rent.getValor_arriendo()));
+        holder.price.setText(formatPeso(rent.getValor_arriendo()));
         holder.agency.setText(rent.getAgencia());
     }
 
@@ -69,7 +71,7 @@ public class RentAdapter extends /*BaseQuickAdapter<Rent>*/ RecyclerView.Adapter
         notifyItemRemoved(position);
     }
 
-    public static String formatoPeso(String valor) {
+    public static String formatPeso(String valor) {
         return NumberFormat.getCurrencyInstance(new Locale("es", "CO")).format(Double.parseDouble(valor));
     }
 
@@ -99,8 +101,8 @@ public class RentAdapter extends /*BaseQuickAdapter<Rent>*/ RecyclerView.Adapter
             Intent intent = new Intent(activity, CreateUpdateActivity.class);
             intent.putExtra("action", false);
             intent.putExtra("rent", rents.get(getLayoutPosition()));
-
             activity.startActivity(intent);
+            activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
 
         @Override
@@ -118,7 +120,7 @@ public class RentAdapter extends /*BaseQuickAdapter<Rent>*/ RecyclerView.Adapter
                     JSONObject jsonObject = new JSONObject(map);
 
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                            Request.Method.POST, Constants.DELETE, jsonObject,
+                            Request.Method.POST, application.DELETE(), jsonObject,
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {

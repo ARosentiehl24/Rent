@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Rent</string>
+    <string name="app_name">uRent</string>
     <string name="report">Report</string>
-    <string name="buscar">Search</string>
+    <string name="search">Search</string>
     <string name="search_by">Search By</string>
     <string name="report_by">Report By</string>
     <string name="code">Code</string>
@@ -16,4 +16,8 @@
         <item>Apartamento</item>
         <item>Local</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="settings">Settings</string>
 </resources>

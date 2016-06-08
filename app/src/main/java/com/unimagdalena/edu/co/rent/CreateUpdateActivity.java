@@ -27,6 +27,7 @@ import butterknife.OnClick;
 public class CreateUpdateActivity extends AppCompatActivity {
 
     private Boolean action;
+    private RentApp rentApp;
 
     @Bind(R.id.code)
     EasyFormEditText code;
@@ -46,6 +47,8 @@ public class CreateUpdateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_update);
         ButterKnife.bind(this);
+
+        rentApp = (RentApp) getApplication();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -112,7 +115,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
 
             if (action) {
                 jsonObjectRequest = new JsonObjectRequest(
-                        Request.Method.POST, Constants.INSERT, jsonObject,
+                        Request.Method.POST, rentApp.INSERT(), jsonObject,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -139,7 +142,7 @@ public class CreateUpdateActivity extends AppCompatActivity {
                 };
             } else {
                 jsonObjectRequest = new JsonObjectRequest(
-                        Request.Method.POST, Constants.UPDATE, jsonObject,
+                        Request.Method.POST, rentApp.UPDATE(), jsonObject,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {

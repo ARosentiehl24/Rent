@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Settings of Web Service">
+        <EditTextPreference
+            android:digits="0123456789."
+            android:inputType="phone"
+            android:key="ip"
+            android:maxLines="1"
+            android:summary="Enter the IP of Web Server"
+            android:title="IP of Web Service" />
+
+        <EditTextPreference
+            android:digits="0123456789."
+            android:inputType="phone"
+            android:key="port"
+            android:maxLines="1"
+            android:summary="Enter the port of Web Server"
+            android:title="Port of Web Service" />
+    </PreferenceCategory>
+</PreferenceScreen>
